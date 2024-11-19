@@ -34,10 +34,318 @@ from sklearn.ensemble import StackingClassifier
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 plt.rc("font", size=14)
 # from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import seaborn as sns
 sns.set(style="white")
 sns.set(style="whitegrid", color_codes=True)
+
+datasets = pd.read_csv('MFCCs-Updated.csv', header=0)
+datasets = datasets.dropna()
+print(datasets.shape)
+print(list(datasets.columns))
+
+datasets.tail()
+
+X = datasets.iloc[:, 1:41].values
+Y = datasets.iloc[:, 41].values
+
+# # Splitting the dataset into the Training set and Test set
+# # Split Data Set into Traning and testing Data Set
+# # 888888888888888888888888888888888888888888888888888888
+# train_data =ds.sample(frac=0.8,random_state=200) #random state is a seed value
+# test_data =ds.drop(train_data.index)
+# # print(test_data)
+# # Save True value to File
+# result_set=test_data['label'].to_frame()
+
+
+X_Train, X_Test, Y_Train, Y_Test = train_test_split(X, Y, test_size = 0.30, random_state = 42)
+
+# Feature Scaling
+
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+
+X_Train = sc_X.fit_transform(X_Train)
+X_Test = sc_X.transform(X_Test)
+#print(Y_Train)
+
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(random_state = 0, max_iter=1000)
+classifier.fit(X_Train, Y_Train)
+
+# Predicting the test set results
+Y_Pred = classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+
+print(accuracy)
+cm = confusion_matrix(Y_Test, Y_Pred)
+print(cm)
+
+# Making the Confusion Matrix
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Real','Fake'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=classifier.classes_)
+disp.plot()
+PrecisionRecallDisplay.from_estimator(classifier,X_Test,Y_Test)
+plt.show()
+
+print(classification_report(Y_Test,Y_Pred))
+
+
+classifier = GradientBoostingClassifier(random_state=0)
+classifier.fit(X_Train, Y_Train)
+
+# Predicting the test set results
+Y_Pred = classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+
+print(accuracy)
+cm = confusion_matrix(Y_Test, Y_Pred)
+print(cm)
+
+# Making the Confusion Matrix
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Fake','Real'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=classifier.classes_)
+disp.plot()
+
+Y_Test_b=pd.get_dummies(Y_Test)
+Y_Test_b=Y_Test_b.drop(["Real"],axis=1)
+Y_Pred_b=pd.get_dummies(Y_Pred)
+Y_Pred_b=Y_Pred_b.drop(["Real"],axis=1)
+#PrecisionRecallDisplay.from_predictions(Y_Test_b, Y_Pred_b)
+PrecisionRecallDisplay.from_estimator(classifier,X_Test,Y_Test)
+
+plt.show()
+
+print(classification_report(Y_Test,Y_Pred))
+
+classifier = SVC(kernel='linear',probability=True)
+classifier.fit(X_Train, Y_Train)
+
+# Predicting the test set results
+Y_Pred = classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+
+print(accuracy)
+cm = confusion_matrix(Y_Test, Y_Pred)
+print(cm)
+
+# Making the Confusion Matrix
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Fake','Real'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=classifier.classes_)
+disp.plot()
+
+Y_Test_b=pd.get_dummies(Y_Test)
+Y_Test_b=Y_Test_b.drop(["Real"],axis=1)
+Y_Pred_b=pd.get_dummies(Y_Pred)
+Y_Pred_b=Y_Pred_b.drop(["Real"],axis=1)
+#PrecisionRecallDisplay.from_predictions(Y_Test_b, Y_Pred_b)
+PrecisionRecallDisplay.from_estimator(classifier,X_Test,Y_Test)
+
+plt.show()
+
+print(classification_report(Y_Test,Y_Pred))
+
+classifier = DecisionTreeClassifier()
+classifier.fit(X_Train, Y_Train)
+
+# Predicting the test set results
+Y_Pred = classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+
+print(accuracy)
+cm = confusion_matrix(Y_Test, Y_Pred)
+print(cm)
+
+# Making the Confusion Matrix
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Fake','Real'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=classifier.classes_)
+disp.plot()
+
+Y_Test_b=pd.get_dummies(Y_Test)
+Y_Test_b=Y_Test_b.drop(["Real"],axis=1)
+Y_Pred_b=pd.get_dummies(Y_Pred)
+Y_Pred_b=Y_Pred_b.drop(["Real"],axis=1)
+#PrecisionRecallDisplay.from_predictions(Y_Test_b, Y_Pred_b)
+PrecisionRecallDisplay.from_estimator(classifier,X_Test,Y_Test)
+
+plt.show()
+
+print(classification_report(Y_Test,Y_Pred))
+
+classifier = RandomForestClassifier()
+classifier.fit(X_Train, Y_Train)
+
+# Predicting the test set results
+Y_Pred = classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+
+print(accuracy)
+cm = confusion_matrix(Y_Test, Y_Pred)
+print(cm)
+
+# Making the Confusion Matrix
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Fake','Real'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=classifier.classes_)
+disp.plot()
+
+Y_Test_b=pd.get_dummies(Y_Test)
+Y_Test_b=Y_Test_b.drop(["Real"],axis=1)
+Y_Pred_b=pd.get_dummies(Y_Pred)
+Y_Pred_b=Y_Pred_b.drop(["Real"],axis=1)
+#PrecisionRecallDisplay.from_predictions(Y_Test_b, Y_Pred_b)
+PrecisionRecallDisplay.from_estimator(classifier,X_Test,Y_Test)
+
+plt.show()
+
+print(classification_report(Y_Test,Y_Pred))
+
+classifier = AdaBoostClassifier()
+classifier.fit(X_Train, Y_Train)
+
+# Predicting the test set results
+Y_Pred = classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+
+print(accuracy)
+cm = confusion_matrix(Y_Test, Y_Pred)
+print(cm)
+
+# Making the Confusion Matrix
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Fake','Real'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=classifier.classes_)
+disp.plot()
+
+Y_Test_b=pd.get_dummies(Y_Test)
+Y_Test_b=Y_Test_b.drop(["Real"],axis=1)
+Y_Pred_b=pd.get_dummies(Y_Pred)
+Y_Pred_b=Y_Pred_b.drop(["Real"],axis=1)
+#PrecisionRecallDisplay.from_predictions(Y_Test_b, Y_Pred_b)
+PrecisionRecallDisplay.from_estimator(classifier,X_Test,Y_Test)
+
+plt.show()
+
+print(classification_report(Y_Test,Y_Pred))
+
+classifier =  BaggingClassifier(base_estimator=LogisticRegression(random_state=1), n_estimators=100,
+                                 max_features=1.0,
+                                 max_samples=100,
+                                 random_state=42, n_jobs=5)
+classifier.fit(X_Train, Y_Train)
+
+# Predicting the test set results
+Y_Pred = classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+
+print(accuracy)
+cm = confusion_matrix(Y_Test, Y_Pred)
+print(cm)
+
+# Making the Confusion Matrix
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Real','Fake'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=classifier.classes_)
+disp.plot()
+
+#PrecisionRecallDisplay.from_estimator(classifier,X_Test,Y_Test)
+pred_prob = classifier.predict_proba(X_Test)[:,1]
+print(pred_prob)
+precision, recall, _ = precision_recall_curve(Y_Test, pred_prob, pos_label='Real')
+disp = PrecisionRecallDisplay(precision=precision, recall=recall)
+disp.plot()
+
+plt.show()
+
+print(classification_report(Y_Test,Y_Pred))
+
+estimators=[
+    ('rf', RandomForestClassifier()),
+    ('svc', SVC(kernel='linear',probability=True)),
+    ('dtc', DecisionTreeClassifier()),
+    ('lr', LogisticRegression(random_state = 0, max_iter=1000))
+    ]
+
+clf = StackingClassifier(
+    estimators=estimators, final_estimator=LogisticRegression()
+)
+
+clf.fit(X_Train, Y_Train).score(X_Test, Y_Test)
+pred=clf.predict(X_Test)
+
+#accuracy = accuracy_score(X_Test, pred)
+pred_prob = clf.predict_proba(X_Test)[:,1]
+pred_prob1 = clf.decision_function(X_Test)
+print(pred_prob)
+print(accuracy)
+
+cm_PAC = confusion_matrix(Y_Test,pred, labels=['Fake','Real'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=clf.classes_)
+disp.plot()
+plt.show()
+
+precision, recall, _ = precision_recall_curve(Y_Test, pred_prob, pos_label='Real')
+disp = PrecisionRecallDisplay(precision=precision, recall=recall)
+disp.plot()
+
+voting_classifier = VotingClassifier(estimators=[
+    ('rf', RandomForestClassifier()),
+    ('svc', SVC(kernel='linear',probability=True)),
+    ('dtc', DecisionTreeClassifier()),
+    ('lr', LogisticRegression(random_state = 0, max_iter=1000)),
+    ('bc', BaggingClassifier(base_estimator=LogisticRegression(random_state=1), n_estimators=100,
+                                 max_features=1.0,
+                                 max_samples=100,
+                                 random_state=42, n_jobs=5)),
+    ('ab', AdaBoostClassifier()),
+    ('gb', GradientBoostingClassifier(random_state=0))
+    ], voting='soft')
+voting_classifier.fit(X_Train, Y_Train)
+# show_eval_scores(voting_classifier, test_data, 'Voting Classifier(soft) with TFIDF Vectorizer')
+Y_Pred=voting_classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+print(accuracy)
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Fake','Real'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=voting_classifier.classes_)
+disp.plot()
+pred_prob = voting_classifier.predict_proba(X_Test)[:,1]
+print(pred_prob)
+precision, recall, _ = precision_recall_curve(Y_Test, pred_prob, pos_label='Real')
+disp = PrecisionRecallDisplay(precision=precision, recall=recall)
+disp.plot()
+plt.show()
+print(classification_report(Y_Test,Y_Pred))
+
+voting_classifier = VotingClassifier(estimators=[
+    ('rf', RandomForestClassifier()),
+    ('svc', SVC(kernel='linear',probability=True)),
+    ('dtc', DecisionTreeClassifier()),
+    ('lr', LogisticRegression(random_state = 0, max_iter=1000)),
+    ('bc', BaggingClassifier(base_estimator=LogisticRegression(random_state=1), n_estimators=100,
+                                 max_features=1.0,
+                                 max_samples=100,
+                                 random_state=42, n_jobs=5)),
+    ('ab', AdaBoostClassifier()),
+    ('gb', GradientBoostingClassifier(random_state=0))
+    ], voting='hard', n_jobs=1)
+voting_classifier.fit(X_Train, Y_Train)
+# show_eval_scores(voting_classifier, test_data, 'Voting Classifier(soft) with TFIDF Vectorizer')
+Y_Pred=voting_classifier.predict(X_Test)
+accuracy = accuracy_score(Y_Test, Y_Pred)
+print(accuracy)
+
+cm_PAC = confusion_matrix(Y_Test,Y_Pred, labels=['Fake','Real'])
+disp = ConfusionMatrixDisplay(confusion_matrix=cm_PAC,display_labels=voting_classifier.classes_)
+disp.plot()
+PrecisionRecallDisplay.from_estimator(classifier,X_Test,Y_Test)
+print(classification_report(Y_Test,Y_Pred))
+
